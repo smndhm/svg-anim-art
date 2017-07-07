@@ -23,13 +23,13 @@
 		<div id="svg"></div>
 
 		<script type="text/javascript">
-			const SVG_NS = "http://www.w3.org/2000/svg";
+			
 			const CONF = {
 				'shape': [
 					{
 						'class': "rythm-pulse",
 						'type': "circle",
-						'color': "#ffad96",
+						'color': "#ffad97",
 						'nb': 3
 					},
 					{
@@ -41,7 +41,7 @@
 					{
 						'class': "rythm-shake",
 						'type': "rect",
-						'color': "#0076ff",
+						'color': "#0076fe",
 						'nb': 5
 					}
 				],
@@ -50,7 +50,8 @@
 					'width': 4,
 					'space': 40,
 					'point': 20,
-					'move': 20
+					'move': 20,
+					'duration': '10s'
 				},
 				'sizes': {
 					'min': 50,
@@ -160,10 +161,11 @@
 			
 			const P = W/CONF.lines.point;
 			let yPoints = {};
+			let yPointsAnimate = {};
 
 			for (let i = 0; i < H; i+=CONF.lines.space) {
 
-				yPoints[0] = i;
+				yPoints[0] = yPointsAnimate[0] = i;
 
 				let s = document.createElementNS(svgNS, "path");
 
@@ -171,22 +173,40 @@
 				s.setAttribute('stroke', CONF.lines.color);
 				s.setAttribute('fill', 'transparent');
 
-				let d = 'M';
+				let d = 'M'
+				let dAnimate = 'M';
 				let Y = i;
+				let Yanimate = i;
 
 				for (let p = 0; p <= CONF.lines.point; p++) {
 
 					const X = P*p;
+
+					//line
 					const ypp = yPoints[p] || i;
 					const M = getRandomInt(ypp + CONF.lines.width, i + CONF.lines.move);
-
 					yPoints[p] = Y = M;
+					d+= X + ' ' + Y;
+					if (p != CONF.lines.point) d+= ', ';
 
-					d+= X + ' ' + Y + ', ';
-					
+					//animate
+					const yppa = yPointsAnimate[p] || i;
+					const Manimate = getRandomInt(yppa + CONF.lines.width, i + CONF.lines.move);
+					yPointsAnimate[p] = Yanimate = Manimate;
+					dAnimate+= X + ' ' + Yanimate;
+					if (p != CONF.lines.point) dAnimate+= ', ';
+										
 				}
 
-				s.setAttribute('d', d);
+				// s.setAttribute('d', d);
+
+				let animate = document.createElementNS(svgNS, "animate");
+				animate.setAttribute('dur', CONF.lines.duration);
+				animate.setAttribute('repeatCount', 'indefinite');
+				animate.setAttribute('attributeName', 'd');
+				animate.setAttribute('values', d + ';' + dAnimate + ';' + d);
+
+				s.appendChild(animate);
 
 				svg.appendChild(s);
 
