@@ -1,1 +1,243 @@
-<h1>Hello!</h1>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>Topo</title>
+		<style>
+			html, body {
+				height: 100%;
+				overflow: hidden;
+				margin: 0;
+				padding: 0;
+			}
+			svg circle, svg rect {
+				opacity: .75;
+				transform-origin: center;
+			}
+
+		</style>
+	</head>
+	<body>
+
+		<div id="svg"></div>
+
+		<script type="text/javascript">
+			const SVG_NS = "http://www.w3.org/2000/svg";
+			const CONF = {
+				'shape': [
+					{
+						'class': "rythm-pulse",
+						'type': "circle",
+						'color': "#ffad96",
+						'nb': 3
+					},
+					{
+						'class': "rythm-jump",
+						'type': "rect",
+						'color': "#00ffa3",
+						'nb': 5
+					},
+					{
+						'class': "rythm-shake",
+						'type': "rect",
+						'color': "#0076ff",
+						'nb': 5
+					}
+				],
+				'lines': {
+					'color': '#ffffff',
+					'width': 4,
+					'space': 40,
+					'point': 20,
+					'move': 20
+				},
+				'sizes': {
+					'min': 50,
+					'max': 600,
+					'margin': 100
+				},
+				'rythm': [
+					'rythm-jump',
+					'rythm-shake',
+					'rythm-pulse',
+					'rythm-jump-small',
+					'rythm-shake-small',
+					'rythm-pulse-small'
+				],
+				'color': '#ffffff'
+			};
+
+			const getRandomInt = function (min, max) {
+				min = Math.ceil(min);
+				max = Math.floor(max);
+				return Math.floor(Math.random() * (max - min)) + min;
+			}
+			
+			//GET DOCUMENT RESOLUTION
+			const W = document.body.offsetWidth;
+			const H = document.body.offsetHeight;
+
+			//CREATE SVG
+			let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+			svg.setAttribute('background', CONF.color);
+			let svgNS = svg.namespaceURI;
+
+			svg.setAttribute('width', W);
+			svg.setAttribute('height', H);
+
+			//ADD ELEMENTS
+			for (let i in CONF.shape) {
+				
+				const shape = CONF.shape[i];
+
+				let coords = [];
+
+				for (let n = 0; n < shape.nb; n++) {
+
+					let s = document.createElementNS(svgNS, shape.type);
+					let over = true;
+					let x, y, w, h;
+
+					while (over) {
+
+						x = getRandomInt(0, Math.floor(W - CONF.sizes.margin));
+						y = getRandomInt(0, Math.floor(H - CONF.sizes.margin));
+
+						w = getRandomInt(CONF.sizes.min, CONF.sizes.max);
+						h = getRandomInt(CONF.sizes.min, CONF.sizes.max);
+
+						if (shape.type == 'rect') {
+
+							s.setAttribute('x', x);
+							s.setAttribute('y', y);
+							s.setAttribute('width', w);
+							s.setAttribute('height', h);
+
+						}
+						else if (shape.type == 'circle') {
+
+							h = w;
+
+							s.setAttribute('cx', x + Math.floor(x/2));
+							s.setAttribute('cy', y + Math.floor(y/2));
+							s.setAttribute('r', Math.floor(w/2));
+
+						}
+
+						if (coords.length) {
+
+							for (let c in coords) {
+
+								const coord = coords[c];
+
+								over = !((x + w) < coord.x || x > (coord.x + coord.w) || (y + h) < coord.y || y > coord.y + coord.h);
+
+								if (over) break;
+
+							}
+
+						}
+						else over = false;
+
+					}
+
+					coords.push({'x':x, 'y':y, 'w':w, 'h':h});
+				    
+				    // s.setAttribute('class', shape.class);
+				    // s.setAttribute('class', CONF.rythm[(CONF.rythm.length-1)%n]);
+					
+					s.setAttribute('class', CONF.rythm[Math.floor(Math.random()*CONF.rythm.length)]);
+					s.setAttribute('fill', shape.color);
+					
+					svg.appendChild(s);
+
+				}
+
+			}
+
+			//lines
+			
+			const P = W/CONF.lines.point;
+			let yPoints = {};
+
+			for (let i = 0; i < H; i+=CONF.lines.space) {
+
+				yPoints[0] = i;
+
+				let s = document.createElementNS(svgNS, "path");
+
+				s.setAttribute('stroke-width', CONF.lines.width);
+				s.setAttribute('stroke', CONF.lines.color);
+				s.setAttribute('fill', 'transparent');
+
+				let d = 'M';
+				let Y = i;
+
+				for (let p = 0; p <= CONF.lines.point; p++) {
+
+					const X = P*p;
+					const ypp = yPoints[p] || i;
+					const M = getRandomInt(ypp + CONF.lines.width, i + CONF.lines.move);
+
+					yPoints[p] = Y = M;
+
+					d+= X + ' ' + Y + ', ';
+					
+				}
+
+				s.setAttribute('d', d);
+
+				svg.appendChild(s);
+
+			}
+
+			document.querySelector('#svg').appendChild(svg);
+
+		</script>
+
+		<script type="text/javascript" src="js/rythm.js"></script>
+		<script type="text/javascript">
+			var rythm = new Rythm();
+
+			rythm.addRythm('rythm-jump', 'jump', 500, 100, {
+				min: -20,
+				max: 20
+			});
+
+			rythm.addRythm('rythm-jump-small', 'jump', 500, 100, {
+				min: -10,
+				max: 10
+			});
+
+			rythm.addRythm('rythm-shake', 'shake', 150, 40, {
+				min: -20,
+				max: 20
+			});
+
+			rythm.addRythm('rythm-shake-small', 'shake', 150, 40, {
+				min: -10,
+				max: 10
+			});
+
+			rythm.addRythm('rythm-pulse', 'pulse', 0, 10, {
+				min: 0.8,
+				max: 1.2
+			});
+
+			rythm.addRythm('rythm-pulse-small', 'pulse', 0, 10, {
+				min: 0.9,
+				max: 1.1
+			});
+
+			// rythm.setMusic("sound.mp3");
+
+			rythm.plugMicrophone().then(function(){
+				console.log(arguments);
+			});
+
+			rythm.start();
+		</script>
+
+	</body>
+</html>
