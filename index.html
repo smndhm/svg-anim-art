@@ -204,7 +204,7 @@
 						const X = P*p;
 
 						//line
-						yPoints[a] = yPoints[a] || {};
+						if (!yPoints[a]) yPoints[a] = {};
 						const ypp = yPoints[a][p] || i;
 						const M = getRandomInt(ypp + CONF.lines.width, i + CONF.lines.move);
 						yPoints[a][p] = Y = M;
@@ -231,8 +231,6 @@
 				svg.appendChild(svgGroup);
 
 			}
-
-			console.log(yPoints);
 
 			document.querySelector('#svg').appendChild(svg);
 
@@ -274,9 +272,7 @@
 
 			// rythm.setMusic("sound.mp3");
 
-			rythm.plugMicrophone().then(function(){
-				// console.log(arguments);
-			});
+			rythm.plugMicrophone();
 
 			rythm.start();
 		</script>
