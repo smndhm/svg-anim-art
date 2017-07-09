@@ -11,7 +11,7 @@
 				margin: 0;
 				padding: 0;
 			}
-			svg circle, svg rect {
+			g circle, g rect {
 				opacity: .75;
 				transform-origin: center;
 			}
@@ -25,21 +25,22 @@
 		<script type="text/javascript">
 			
 			const CONF = {
+				'color': '#000000',
 				'shape': [
 					{
-						'class': "rythm-pulse",
+						'class': "circle-pink",
 						'type': "circle",
 						'color': "#ffad97",
 						'nb': 3
 					},
 					{
-						'class': "rythm-jump",
+						'class': "rect-green",
 						'type': "rect",
 						'color': "#00ffa3",
 						'nb': 5
 					},
 					{
-						'class': "rythm-shake",
+						'class': "rect-blue",
 						'type': "rect",
 						'color': "#0076fe",
 						'nb': 5
@@ -51,7 +52,8 @@
 					'space': 40,
 					'point': 20,
 					'move': 20,
-					'duration': '10s'
+					'duration': '10s',
+					'class': 'lines'
 				},
 				'sizes': {
 					'min': 50,
@@ -65,8 +67,7 @@
 					'rythm-jump-small',
 					'rythm-shake-small',
 					'rythm-pulse-small'
-				],
-				'color': '#000000'
+				]
 			};
 
 			const getRandomInt = function (min, max) {
@@ -81,16 +82,29 @@
 
 			//CREATE SVG
 			let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-			svg.setAttribute('background', CONF.color);
 			let svgNS = svg.namespaceURI;
 
 			svg.setAttribute('width', W);
 			svg.setAttribute('height', H);
 
+			//Background
+			let svgBackground = document.createElementNS(svgNS, 'rect');
+
+			svgBackground.setAttribute('width', W);
+			svgBackground.setAttribute('height', H);
+			svgBackground.setAttribute('fill', CONF.color);
+
+			svg.appendChild(svgBackground);
+
 			//ADD ELEMENTS
 			for (let i in CONF.shape) {
-				
+
 				const shape = CONF.shape[i];
+
+				//group
+				let svgGroup = document.createElementNS(svgNS, 'g');
+
+				svgGroup.setAttribute('class', shape.class);
 
 				let coords = [];
 
@@ -151,9 +165,11 @@
 					s.setAttribute('class', CONF.rythm[Math.floor(Math.random()*CONF.rythm.length)]);
 					s.setAttribute('fill', shape.color);
 					
-					svg.appendChild(s);
+					svgGroup.appendChild(s);
 
 				}
+
+				svg.appendChild(svgGroup);
 
 			}
 
@@ -162,6 +178,10 @@
 			const P = W/CONF.lines.point;
 			let yPoints = {};
 			let yPointsAnimate = {};
+
+			let svgGroup = document.createElementNS(svgNS, 'g');
+
+			svgGroup.setAttribute('class', CONF.lines.class);
 
 			for (let i = 0; i < H; i+=CONF.lines.space) {
 
@@ -208,7 +228,9 @@
 
 				s.appendChild(animate);
 
-				svg.appendChild(s);
+				svgGroup.appendChild(s);
+
+				svg.appendChild(svgGroup);
 
 			}
 
