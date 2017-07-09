@@ -4,4 +4,6 @@ The idea was for a party to project an artwork and make its shapes move accordin
 
 Exemple : https://smndhm.github.io/topo/
 
+Using [Rythm.js](https://github.com/Okazari/Rythm.js) for the shape dance.
+
 Artwork by [@CYKLE](https://www.instagram.com/cykle_graphic/) : https://www.instagram.com/p/BWLUTp3gMsv/
