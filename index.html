@@ -147,7 +147,7 @@
 
 								const coord = coords[c];
 
-								over = !((x + w) < coord.x || x > (coord.x + coord.w) || (y + h) < coord.y || y > coord.y + coord.h);
+								over = !((x + w + CONF.sizes.margin) < coord.x || x > (coord.x + coord.w + CONF.sizes.margin) || (y + h + CONF.sizes.margin) < coord.y || y > (coord.y + coord.h + CONF.sizes.margin));
 
 								if (over) break;
 
