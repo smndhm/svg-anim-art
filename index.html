@@ -22,10 +22,10 @@
 
 		<div id="svg"></div>
 
-		<script type="text/javascript">
+		<script>
 			
 			const CONF = {
-				'color': '#000000',
+				'color': '#ffffff', //projector -> '#000000'
 				'shape': [
 					{
 						'class': "circle-pink",
@@ -47,13 +47,16 @@
 					}
 				],
 				'lines': {
+					'class': 'lines',
 					'color': '#ffffff',
 					'width': 4,
 					'space': 40,
 					'point': 20,
 					'move': 20,
-					'duration': '10s',
-					'class': 'lines'
+					'animate': {
+						'nb': 10,
+						'duration': '20s',
+					}
 				},
 				'sizes': {
 					'min': 50,
@@ -103,7 +106,6 @@
 
 				//group
 				let svgGroup = document.createElementNS(svgNS, 'g');
-
 				svgGroup.setAttribute('class', shape.class);
 
 				let coords = [];
@@ -174,18 +176,14 @@
 			}
 
 			//lines
-			
 			const P = W/CONF.lines.point;
 			let yPoints = {};
-			let yPointsAnimate = {};
 
 			let svgGroup = document.createElementNS(svgNS, 'g');
-
 			svgGroup.setAttribute('class', CONF.lines.class);
 
+			//create lines 
 			for (let i = 0; i < H; i+=CONF.lines.space) {
-
-				yPoints[0] = yPointsAnimate[0] = i;
 
 				let s = document.createElementNS(svgNS, "path");
 
@@ -193,38 +191,38 @@
 				s.setAttribute('stroke', CONF.lines.color);
 				s.setAttribute('fill', 'transparent');
 
-				let d = 'M'
-				let dAnimate = 'M';
 				let Y = i;
-				let Yanimate = i;
+				let animations = [];
 
-				for (let p = 0; p <= CONF.lines.point; p++) {
+				for (let a = 0; a < CONF.lines.animate.nb; a++) {
 
-					const X = P*p;
+					let d = 'M';
 
-					//line
-					const ypp = yPoints[p] || i;
-					const M = getRandomInt(ypp + CONF.lines.width, i + CONF.lines.move);
-					yPoints[p] = Y = M;
-					d+= X + ' ' + Y;
-					if (p != CONF.lines.point) d+= ', ';
+					//create points
+					for (let p = 0; p <= CONF.lines.point; p++) {
 
-					//animate
-					const yppa = yPointsAnimate[p] || i;
-					const Manimate = getRandomInt(yppa + CONF.lines.width, i + CONF.lines.move);
-					yPointsAnimate[p] = Yanimate = Manimate;
-					dAnimate+= X + ' ' + Yanimate;
-					if (p != CONF.lines.point) dAnimate+= ', ';
-										
+						const X = P*p;
+
+						//line
+						yPoints[a] = yPoints[a] || {};
+						const ypp = yPoints[a][p] || i;
+						const M = getRandomInt(ypp + CONF.lines.width, i + CONF.lines.move);
+						yPoints[a][p] = Y = M;
+						d+= X + ' ' + Y;
+						if (p != CONF.lines.point) d+= ', ';									
+					}
+
+					animations.push(d);
+
 				}
 
-				// s.setAttribute('d', d);
+				animations.push(animations[0]);
 
 				let animate = document.createElementNS(svgNS, "animate");
-				animate.setAttribute('dur', CONF.lines.duration);
+				animate.setAttribute('dur', CONF.lines.animate.duration);
 				animate.setAttribute('repeatCount', 'indefinite');
 				animate.setAttribute('attributeName', 'd');
-				animate.setAttribute('values', d + ';' + dAnimate + ';' + d);
+				animate.setAttribute('values', animations.join(';'));
 
 				s.appendChild(animate);
 
@@ -234,13 +232,15 @@
 
 			}
 
+			console.log(yPoints);
+
 			document.querySelector('#svg').appendChild(svg);
 
 		</script>
 
-		<script type="text/javascript" src="js/rythm.js"></script>
-		<script type="text/javascript">
-			var rythm = new Rythm();
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/rythm.js/2.0.5/rythm.min.js"></script>
+		<script>
+			let rythm = new Rythm();
 
 			rythm.addRythm('rythm-jump', 'jump', 500, 100, {
 				min: -20,
@@ -275,7 +275,7 @@
 			// rythm.setMusic("sound.mp3");
 
 			rythm.plugMicrophone().then(function(){
-				console.log(arguments);
+				// console.log(arguments);
 			});
 
 			rythm.start();
