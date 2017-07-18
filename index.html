@@ -27,19 +27,16 @@
 				'color': '#ffffff', //projector -> '#000000'
 				'shape': [
 					{
-						'class': "circle-pink",
 						'type': "circle",
 						'color': "#ffad97",
 						'nb': 3
 					},
 					{
-						'class': "rect-green",
 						'type': "rect",
 						'color': "#00ffa3",
 						'nb': 5
 					},
 					{
-						'class': "rect-blue",
 						'type': "rect",
 						'color': "#0076fe",
 						'nb': 5
@@ -62,14 +59,23 @@
 					'max': 600,
 					'margin': 100
 				},
-				'rythm': [
-					'rythm-jump',
-					'rythm-shake',
-					'rythm-pulse',
-					'rythm-jump-small',
-					'rythm-shake-small',
-					'rythm-pulse-small'
-				]
+				'rythm': {
+					'circle' : [
+						'rythm-pulse-small',
+						'rythm-pulse',
+						'rythm-pulse-big',
+					],
+					'rect' : {
+						'vertical' : [
+							'rythm-jump',
+							'rythm-jump-small'
+						],
+						'horizontal' : [
+							'rythm-shake',
+							'rythm-shake-small',
+						]
+					}
+				}
 			};
 
 			const getRandomInt = function (min, max) {
@@ -105,7 +111,7 @@
 
 				//group
 				let svgGroup = document.createElementNS(svgNS, 'g');
-				svgGroup.setAttribute('class', shape.class);
+				// svgGroup.setAttribute('class', shape.class);
 
 				let coords = [];
 
@@ -130,6 +136,9 @@
 							s.setAttribute('width', w);
 							s.setAttribute('height', h);
 
+							let rectRythm = (w>h) ? CONF.rythm.rect.horizontal : CONF.rythm.rect.vertical;
+							s.setAttribute('class', rectRythm[n%rectRythm.length]);
+
 						}
 						else if (shape.type == 'circle') {
 
@@ -138,6 +147,8 @@
 							s.setAttribute('cx', x + Math.floor(w/2));
 							s.setAttribute('cy', y + Math.floor(h/2));
 							s.setAttribute('r', Math.floor(w/2));
+
+							s.setAttribute('class', CONF.rythm.circle[n%CONF.rythm.circle.length]);
 
 						}
 
@@ -160,10 +171,6 @@
 
 					coords.push({'x':x, 'y':y, 'w':w, 'h':h});
 				    
-				    // s.setAttribute('class', shape.class);
-				    // s.setAttribute('class', CONF.rythm[(CONF.rythm.length-1)%n]);
-					
-					s.setAttribute('class', CONF.rythm[Math.floor(Math.random()*CONF.rythm.length)]);
 					s.setAttribute('fill', shape.color);
 					
 					svgGroup.appendChild(s);
@@ -239,12 +246,30 @@
 		<script>
 			let rythm = new Rythm();
 
+			const dance = function (elem, value, options) {
+				const max = options.max || 1.25;
+				const min = options.min || 0.75;
+				const transform = options.transform || 'scale';
+				const scale = (max - min) * value;
+				elem.style.transform = transform + '(' + (min + scale) + ')';
+			}
+
+			rythm.addRythm('rythm-jump-small', 'jump', 500, 100, {
+				min: -10,
+				max: 10
+			});
+
 			rythm.addRythm('rythm-jump', 'jump', 500, 100, {
 				min: -20,
 				max: 20
 			});
 
-			rythm.addRythm('rythm-jump-small', 'jump', 500, 100, {
+			rythm.addRythm('rythm-jump-big', 'jump', 500, 100, {
+				min: -30,
+				max: 30
+			});
+
+			rythm.addRythm('rythm-shake-small', 'shake', 150, 40, {
 				min: -10,
 				max: 10
 			});
@@ -254,14 +279,9 @@
 				max: 20
 			});
 
-			rythm.addRythm('rythm-shake-small', 'shake', 150, 40, {
-				min: -10,
-				max: 10
-			});
-
-			rythm.addRythm('rythm-pulse', 'pulse', 0, 10, {
-				min: 0.8,
-				max: 1.2
+			rythm.addRythm('rythm-shake-big', 'shake', 150, 40, {
+				min: -30,
+				max: 30
 			});
 
 			rythm.addRythm('rythm-pulse-small', 'pulse', 0, 10, {
@@ -269,7 +289,15 @@
 				max: 1.1
 			});
 
-			// rythm.setMusic("sound.mp3");
+			rythm.addRythm('rythm-pulse', 'pulse', 0, 10, {
+				min: 0.8,
+				max: 1.2
+			});
+
+			rythm.addRythm('rythm-pulse-big', 'pulse', 0, 10, {
+				min: 0.7,
+				max: 1.3
+			});
 
 			rythm.plugMicrophone();
 
