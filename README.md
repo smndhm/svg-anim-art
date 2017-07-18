@@ -4,7 +4,7 @@ The idea was for a party to project an artwork and make its shapes move accordin
 
 ## Topo
 
-Demo : [https://smndhm.github.io/topo/topo.html](https://smndhm.github.io/topo/topo.html)
+Demo : [https://smndhm.github.io/svg-anim-art/topo.html](https://smndhm.github.io/svg-anim-art/topo.html)
 
 Using [Rythm.js](https://github.com/Okazari/Rythm.js) for the shape dance.
 
