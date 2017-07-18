@@ -1,8 +1,10 @@
-# topo
+# SVG Anim Art
 
 The idea was for a party to project an artwork and make its shapes move according to the music.
 
-Exemple : https://smndhm.github.io/topo/
+## Topo
+
+Demo : https://smndhm.github.io/topo/topo.html
 
 Using [Rythm.js](https://github.com/Okazari/Rythm.js) for the shape dance.
 
