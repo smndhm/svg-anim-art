@@ -8,7 +8,7 @@ Using [Rythm.js](https://github.com/Okazari/Rythm.js) for the shape dance.
 
 Demo : [https://smndhm.github.io/svg-anim-art/topo.html](https://smndhm.github.io/svg-anim-art/topo.html)
 
-Artwork by [@CYKLE](https://www.instagram.com/cykle_graphic/) : https://www.instagram.com/p/BWLUTp3gMsv/
+Artwork by [@CYKLE](https://www.instagram.com/cykle_graphic/) : [https://www.instagram.com/p/BWLUTp3gMsv/](https://www.instagram.com/p/BWLUTp3gMsv/)
 
 ## Daron
 
