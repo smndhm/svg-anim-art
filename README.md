@@ -14,4 +14,4 @@ Artwork by [@CYKLE](https://www.instagram.com/cykle_graphic/) : https://www.inst
 
 Demo : [https://smndhm.github.io/svg-anim-art/daron.html](https://smndhm.github.io/svg-anim-art/daron.html)
 
-Artwork by [#daroncrew](https://www.instagram.com/explore/tags/daroncrew/) !
+Artwork by [@daroncrew](https://www.instagram.com/daroncrew/) !
